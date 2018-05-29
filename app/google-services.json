@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1024175910755",
+    "firebase_url": "https://ynpress-205411.firebaseio.com",
+    "project_id": "ynpress-205411",
+    "storage_bucket": "ynpress-205411.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1024175910755:android:0abfb746a2957eca",
+        "android_client_info": {
+          "package_name": "ru.temoteam.a1exs.ynpress"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1024175910755-ehmrg7dhens4f9dgh8vclelpeh14ttk0.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1024175910755-ehmrg7dhens4f9dgh8vclelpeh14ttk0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQdmsiCeU9DJ3mFSI0oOY622BqAg_4M3M"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
