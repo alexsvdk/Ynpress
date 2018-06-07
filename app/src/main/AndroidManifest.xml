@@ -24,7 +24,6 @@ package="ru.temoteam.a1exs.ynpress">
         </intent-filter>
     </activity>
 
-    <activity android:name=".ui.activity.LoginActivity" />
     <activity android:name=".ui.activity.ArticleActivity" />
     <activity android:name=".ui.activity.MainActivity" />
 
