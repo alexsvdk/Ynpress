@@ -6,7 +6,7 @@ import ru.temoteam.a1exs.ynpress.api.Requester
 data class User(val email: String,private val password:String) {
 
     val cookie: String
-    val profile: Profile by lazy { Parser.parseProfile(Requester.profile().text) }
+    var profile: Profile? = null
 
     init {
         val response = Requester.auth(email,password)
@@ -15,7 +15,10 @@ data class User(val email: String,private val password:String) {
 
     fun activateAccount(){
         Requester.cookie=cookie
-        println(profile)
+    }
+
+    fun loadProfile(){
+        profile=Parser.parseProfile(Requester.profile().text)
     }
 
     data class Profile(
