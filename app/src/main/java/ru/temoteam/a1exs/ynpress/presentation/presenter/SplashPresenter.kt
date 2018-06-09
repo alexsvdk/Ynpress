@@ -1,5 +1,6 @@
 package ru.temoteam.a1exs.ynpress.presentation.presenter
 
+import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.google.firebase.auth.FirebaseAuth
@@ -26,11 +27,11 @@ class SplashPresenter : MvpPresenter<SplashView>() {
                 uiThread { viewState.start(null) }
             }
         else{
-            database.reference.child(auth!!.currentUser!!.email!!).child("account").addValueEventListener(object :ValueEventListener{
+            database.reference.child(auth!!.currentUser!!.uid).child("account").addValueEventListener(object :ValueEventListener{
                 override fun onCancelled(p0: DatabaseError) { }
 
                 override fun onDataChange(p0: DataSnapshot) {
-                    val user = p0.value as User
+                    val user = User(p0.value as HashMap<String, Any>)
                     user.activateAccount()
                     viewState.start(user)
                     doAsync {
@@ -47,18 +48,40 @@ class SplashPresenter : MvpPresenter<SplashView>() {
     fun login(email:String,password:String) {
         doAsync {
             try {
+                Log.i("email",email)
+                Log.i("password", password)
+
                 val user = User(email,password)
-                user.activateAccount()
-                user.loadProfile()
                 uiThread {
                     viewState.start(user)
                     auth.signInWithEmailAndPassword(email,password).addOnFailureListener {
-                        auth.createUserWithEmailAndPassword(email,password)
+                        auth.createUserWithEmailAndPassword(email,password).addOnSuccessListener {
+                            database.reference.child(auth!!.currentUser!!.uid).child("account").setValue(user)
+                            viewState.setLoginBtnState(true,"Success")
+                            doAsync {
+                                Thread.sleep(1500)
+                                uiThread { viewState.continie() }
+                            }
+
+                        }
+                    }.addOnSuccessListener {
+                        database.reference.child(auth!!.currentUser!!.uid).child("account").setValue(user)
+                        viewState.setLoginBtnState(true,"Success")
+                        doAsync {
+                            Thread.sleep(1500)
+                            uiThread { viewState.continie() }
+                        }
                     }
-                    database.reference.child(auth!!.currentUser!!.email!!).child("account").setValue(user)
+
                 }
 
-            }catch (e: Exception){
+            }catch (e: IndexOutOfBoundsException){
+                e.printStackTrace()
+                uiThread {
+                    viewState.setLoginBtnState(false,"Bad email or password")
+                }
+            }
+            catch (e: Exception){
                 e.printStackTrace()
             }
         }

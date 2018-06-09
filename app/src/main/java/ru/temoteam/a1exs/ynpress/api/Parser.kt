@@ -9,6 +9,7 @@ object Parser {
 
     fun parseProfile(profileHTML: String?): User.Profile{
         val page = Jsoup.parse(profileHTML).getElementsByClass("inner")[1]
+        println(page.html())
         val imgURL = page.getElementsByClass("pic-wrapper")[0].attr("style").substringAfter("url(").substringBefore(")")
         val info = page.getElementsByClass("info")[0]
         val name = info.getElementsByClass("name-surname").text()

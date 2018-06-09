@@ -32,7 +32,10 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:inputType="textEmailAddress"
-            android:text="email" />
+            android:textColor="@android:color/white"
+            android:shadowColor="@android:color/white"
+            android:textColorHighlight="@android:color/white"
+            android:hint="email" />
 
         <EditText
             android:id="@+id/editPassword"
@@ -40,7 +43,10 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:inputType="textPassword"
-            android:text="password" />
+            android:textColor="@android:color/white"
+            android:shadowColor="@android:color/white"
+            android:textColorHighlight="@android:color/white"
+            android:hint="password" />
 
         <com.dd.processbutton.iml.ActionProcessButton
             android:id="@+id/btnSignIn"
@@ -54,6 +60,8 @@
             app:pb_colorNormal="@color/blue_normal"
             app:pb_colorPressed="@color/blue_pressed"
             app:pb_colorProgress="@color/purple_progress"
+            app:pb_colorError="@color/red_error"
+            app:pb_textError="Error"
             app:pb_textComplete="Success"
             app:pb_textProgress="Loading" />
 

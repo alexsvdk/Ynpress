@@ -1,24 +1,41 @@
 package ru.temoteam.a1exs.ynpress.api.objects
 
+import android.support.annotation.Keep
+import android.util.Log
+import okhttp3.Cookie
+import okhttp3.CookieJar
+import okhttp3.HttpUrl
 import ru.temoteam.a1exs.ynpress.api.Parser
 import ru.temoteam.a1exs.ynpress.api.Requester
 
-data class User(val email: String,private val password:String) {
+class User() {
 
-    val cookie: String
-    var profile: Profile? = null
-
-    init {
+    constructor(email:String,password:String): this(){
+        this.email = email
         val response = Requester.auth(email,password)
-        cookie=response.setCoocie!!.substring(response.setCoocie.indexOf("wordpress_")).substringBefore(";")
+        cookie = response!!.header("Set-Cookie")!!.substring(response.header("Set-Cookie")!!.indexOf("wordpress_")).substringBefore(";")
+        activateAccount()
+        println(cookie)
+        loadProfile()
     }
 
+    constructor(hashMap: HashMap<String,Any>): this(){
+        this.email = hashMap["email"] as String
+        this.cookie = hashMap["cookie"] as String
+        this.profile = Profile(hashMap["profile"] as HashMap<String, String>)
+    }
+
+    var email: String? = null
+    var cookie:String? = null
+    var profile: Profile? = null
+
+
     fun activateAccount(){
-        Requester.cookie=cookie
+        Requester.cookie=cookie!!
     }
 
     fun loadProfile(){
-        profile=Parser.parseProfile(Requester.profile().text)
+        profile=Parser.parseProfile(Requester.profile()!!.body()!!.string())
     }
 
     data class Profile(
@@ -30,5 +47,16 @@ data class User(val email: String,private val password:String) {
             val phone: String,
             val imgURL: String,
             val rating: String
-    )
+    ){
+        constructor(hashMap: HashMap<String, String>): this(
+                hashMap["name"]!!,
+                hashMap["surname"]!!,
+                hashMap["birthday"]!!,
+                hashMap["region"]!!,
+                hashMap["regionId"]!!,
+                hashMap["phone"]!!,
+                hashMap["imgURL"]!!,
+                hashMap["rating"]!!
+        )
+    }
 }
