@@ -48,7 +48,6 @@ class SplashActivity : MvpActivity(), SplashView {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         btnSignIn.onClick {
-            //btnSignIn.setMode(ActionProcessButton.Mode.PROGRESS)
             btnSignIn.progress=50
             TransitionManager.beginDelayedTransition(layout)
             editEmail.visibility=View.GONE

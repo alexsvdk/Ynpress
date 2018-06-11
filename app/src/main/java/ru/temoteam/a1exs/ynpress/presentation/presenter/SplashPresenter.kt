@@ -1,5 +1,6 @@
 package ru.temoteam.a1exs.ynpress.presentation.presenter
 
+import android.provider.Settings
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
@@ -10,6 +11,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import ru.temoteam.a1exs.ynpress.Global
+import ru.temoteam.a1exs.ynpress.Global.auth
+import ru.temoteam.a1exs.ynpress.Global.database
 import ru.temoteam.a1exs.ynpress.api.Requester
 import ru.temoteam.a1exs.ynpress.api.objects.User
 import ru.temoteam.a1exs.ynpress.presentation.view.SplashView
@@ -17,8 +21,7 @@ import ru.temoteam.a1exs.ynpress.presentation.view.SplashView
 @InjectViewState
 class SplashPresenter : MvpPresenter<SplashView>() {
 
-    private val auth = FirebaseAuth.getInstance()
-    private val database = FirebaseDatabase.getInstance()
+
 
     init {
         if (auth.currentUser==null)
@@ -37,6 +40,7 @@ class SplashPresenter : MvpPresenter<SplashView>() {
                     doAsync {
                         user.loadProfile()
                         Thread.sleep(1500)
+                        Global.user = user
                         uiThread { viewState.continie() }
                     }
                 }
@@ -69,6 +73,7 @@ class SplashPresenter : MvpPresenter<SplashView>() {
                         viewState.setLoginBtnState(true,"Success")
                         doAsync {
                             Thread.sleep(1500)
+                            Global.user = user
                             uiThread { viewState.continie() }
                         }
                     }

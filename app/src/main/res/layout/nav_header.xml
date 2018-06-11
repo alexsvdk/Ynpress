@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="192dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark"
+    android:orientation="vertical"
+    android:gravity="bottom">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:background="#000000"
+        android:id="@+id/back"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        >
+
+        <TextView
+            android:id="@+id/second_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="TextView"
+            android:textColor="#FFFF"
+            android:layout_alignParentBottom="true"/>
+
+        <TextView
+            android:id="@+id/first_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/second_field"
+            android:textColor="#FFFF"
+            android:textSize="18sp"
+            tools:text="TextView" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_above="@id/first_field"
+
+            android:id="@+id/profilepic"/>
+
+
+
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
