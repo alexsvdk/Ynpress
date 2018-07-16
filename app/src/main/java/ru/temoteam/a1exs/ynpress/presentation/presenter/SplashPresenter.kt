@@ -1,6 +1,5 @@
 package ru.temoteam.a1exs.ynpress.presentation.presenter
 
-import android.provider.Settings
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
@@ -12,8 +11,6 @@ import com.google.firebase.database.ValueEventListener
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import ru.temoteam.a1exs.ynpress.Global
-import ru.temoteam.a1exs.ynpress.Global.auth
-import ru.temoteam.a1exs.ynpress.Global.database
 import ru.temoteam.a1exs.ynpress.api.Requester
 import ru.temoteam.a1exs.ynpress.api.objects.User
 import ru.temoteam.a1exs.ynpress.presentation.view.SplashView
@@ -21,9 +18,12 @@ import ru.temoteam.a1exs.ynpress.presentation.view.SplashView
 @InjectViewState
 class SplashPresenter : MvpPresenter<SplashView>() {
 
-
+    private val auth = FirebaseAuth.getInstance()
+    private val database = FirebaseDatabase.getInstance()
 
     init {
+        Global.auth = auth
+        Global.database = database
         if (auth.currentUser==null)
             doAsync {
                 Thread.sleep(700)
@@ -37,10 +37,21 @@ class SplashPresenter : MvpPresenter<SplashView>() {
                     val user = User(p0.value as HashMap<String, Any>)
                     user.activateAccount()
                     viewState.start(user)
+                    Global.user=user
                     doAsync {
-                        user.loadProfile()
-                        Thread.sleep(1500)
-                        Global.user = user
+                        try {
+                            user.loadProfile()
+                        } catch (e: IndexOutOfBoundsException){
+                            try {
+                                user.login()
+                                user.activateAccount()
+                                user.loadProfile()
+                            } catch (e:Exception){
+                                viewState.start(null)
+                                viewState.setEmain(user.email!!)
+                            }
+                        }
+
                         uiThread { viewState.continie() }
                     }
                 }
@@ -57,6 +68,7 @@ class SplashPresenter : MvpPresenter<SplashView>() {
 
                 val user = User(email,password)
                 uiThread {
+                    Global.user=user
                     viewState.start(user)
                     auth.signInWithEmailAndPassword(email,password).addOnFailureListener {
                         auth.createUserWithEmailAndPassword(email,password).addOnSuccessListener {
@@ -73,7 +85,6 @@ class SplashPresenter : MvpPresenter<SplashView>() {
                         viewState.setLoginBtnState(true,"Success")
                         doAsync {
                             Thread.sleep(1500)
-                            Global.user = user
                             uiThread { viewState.continie() }
                         }
                     }

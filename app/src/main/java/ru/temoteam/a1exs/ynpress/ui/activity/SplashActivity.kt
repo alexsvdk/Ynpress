@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.ActionMode
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import com.androidnetworking.AndroidNetworking
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -22,6 +23,7 @@ import com.transitionseverywhere.TransitionManager
 import kotlinx.android.synthetic.main.activity_splash.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.sdk25.coroutines.onClick
+import org.jetbrains.anko.sdk25.coroutines.onEditorAction
 import org.jetbrains.anko.uiThread
 import ru.temoteam.a1exs.ynpress.api.objects.User
 import kotlin.math.log
@@ -47,12 +49,20 @@ class SplashActivity : MvpActivity(), SplashView {
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
+
+
+
         btnSignIn.onClick {
             btnSignIn.progress=50
             TransitionManager.beginDelayedTransition(layout)
             editEmail.visibility=View.GONE
             editPassword.visibility=View.GONE
             mSplashPresenter.login(editEmail.text.toString(),editPassword.text.toString())
+        }
+
+        editPassword.onEditorAction { v, actionId, event ->
+            if (event==null&&actionId==EditorInfo.IME_ACTION_DONE)
+                btnSignIn.callOnClick()
         }
 
     }
@@ -91,6 +101,11 @@ class SplashActivity : MvpActivity(), SplashView {
             }
         }
     }
+
+    override fun setEmain(email: String) {
+        editEmail.setText(email)
+    }
+
 
 
 

@@ -1,4 +1,5 @@
 package ru.temoteam.a1exs.ynpress.api
+import android.util.Log
 import org.jetbrains.anko.db.TEXT
 import ru.temoteam.a1exs.ynpress.api.objects.User
 import org.jsoup.Jsoup
@@ -40,6 +41,7 @@ object Parser {
                     it.select("div > div > div")[0].text().replace("\"","")
             ))
         }
+        Log.i("LOADING",readHtml)
         return articles
     }
 

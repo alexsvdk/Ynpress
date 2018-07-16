@@ -20,8 +20,7 @@ object Requester {
         upload.addMultipartParameter("text","text")
         params.forEach { t, u -> upload.addMultipartParameter(t,u) }
         val response = upload.build().executeForOkHttpResponse()
-        Log.i("RESPONSE", response.isSuccess.toString())
-        if (!response.isSuccess) Log.i("RESPONSE", response.error.message)
+        if (!response.isSuccess) Log.e("RESPONSE", response.error.message)
         return response.okHttpResponse
     }
 

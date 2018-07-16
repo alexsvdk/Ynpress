@@ -7,4 +7,5 @@ interface SplashView : MvpView {
     fun start(user: User?)
     fun setLoginBtnState(state: Boolean,text: String)
     fun continie()
+    fun setEmain(email:String)
 }

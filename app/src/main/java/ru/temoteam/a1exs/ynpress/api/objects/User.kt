@@ -12,23 +12,28 @@ class User() {
 
     constructor(email:String,password:String): this(){
         this.email = email
-        val response = Requester.auth(email,password)
-        cookie = response!!.header("Set-Cookie")!!.substring(response.header("Set-Cookie")!!.indexOf("wordpress_")).substringBefore(";")
+        this.password = password
+        login()
         activateAccount()
-        println(cookie)
         loadProfile()
     }
 
     constructor(hashMap: HashMap<String,Any>): this(){
         this.email = hashMap["email"] as String
+        this.password = hashMap["password"] as String
         this.cookie = hashMap["cookie"] as String
         this.profile = Profile(hashMap["profile"] as HashMap<String, String>)
     }
 
     var email: String? = null
+    var password:String? = null
     var cookie:String? = null
     var profile: Profile? = null
 
+    fun login(){
+        val response = Requester.auth(email!!, password!!)
+        cookie = response!!.header("Set-Cookie")!!.substring(response.header("Set-Cookie")!!.indexOf("wordpress_")).substringBefore(";")
+    }
 
     fun activateAccount(){
         Requester.cookie=cookie!!

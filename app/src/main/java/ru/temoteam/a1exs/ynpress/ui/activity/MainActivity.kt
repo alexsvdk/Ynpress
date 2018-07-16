@@ -1,5 +1,6 @@
 package ru.temoteam.a1exs.ynpress.ui.activity
 
+import android.app.FragmentManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -8,6 +9,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.design.widget.NavigationView
 import android.support.v7.app.ActionBarDrawerToggle
+import android.util.Log
 import android.view.MenuItem
 
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -21,11 +23,12 @@ import com.ms_square.etsyblur.BlurConfig
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 import kotlinx.android.synthetic.main.toolbar.*
+import org.jetbrains.anko.sdk25.coroutines.onClick
+import ru.temoteam.a1exs.ynpress.ui.fragment.NewsFragment
 
 
+class MainActivity : MvpAppCompatActivity(), MainView, NavigationView.OnNavigationItemSelectedListener {
 
-
-class MainActivity : MvpAppCompatActivity(), MainView {
 
     companion object {
         const val TAG = "MainActivity"
@@ -35,7 +38,6 @@ class MainActivity : MvpAppCompatActivity(), MainView {
     @InjectPresenter
     lateinit var mMainPresenter: MainPresenter
     private lateinit var toggle: ActionBarDrawerToggle
-
     private lateinit var blur: Blur
 
 
@@ -48,14 +50,10 @@ class MainActivity : MvpAppCompatActivity(), MainView {
         supportActionBar!!.setHomeButtonEnabled(true)
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_menu_white)
         toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.drawer_open,  R.string.drawer_close)
-        nvView.setNavigationItemSelectedListener(
-                NavigationView.OnNavigationItemSelectedListener { menuItem ->
-
-                    true
-                })
-
+        nvView.setNavigationItemSelectedListener(this)
         drawer_layout.addDrawerListener(toggle)
         toggle.isDrawerIndicatorEnabled = true
+        nvView.getHeaderView(0).onClick { selectFragment(R.id.nav_profile) }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
@@ -65,8 +63,7 @@ class MainActivity : MvpAppCompatActivity(), MainView {
 
     override fun setDrawerPic(bitmap: Bitmap) {
         nvView.getHeaderView(0).profilepic.setImageBitmap(bitmap)
-        blur.execute(bitmap,false,{nvView.getHeaderView(0).back.setImageBitmap(it)})
-
+        blur.execute(bitmap,false) {nvView.getHeaderView(0).back.setImageBitmap(it)}
     }
 
     override fun setDrawerText1(text: String) {
@@ -83,8 +80,19 @@ class MainActivity : MvpAppCompatActivity(), MainView {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (toggle.onOptionsItemSelected(item)) {
-            true
-        } else super.onOptionsItemSelected(item)
+        return super.onOptionsItemSelected(item)
     }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        selectFragment(item.itemId)
+        return true
+    }
+
+    fun selectFragment(id: Int){
+        if (drawer_layout.isDrawerOpen(nvView)) drawer_layout.closeDrawers()
+        fragmentManager.beginTransaction().replace(R.id.flContent,mMainPresenter.getFragmentById(id)).commit()
+    }
+
+
+
 }
