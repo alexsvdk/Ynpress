@@ -7,6 +7,8 @@ import okhttp3.CookieJar
 import okhttp3.HttpUrl
 import ru.temoteam.a1exs.ynpress.api.Parser
 import ru.temoteam.a1exs.ynpress.api.Requester
+import java.util.*
+import kotlin.collections.HashMap
 
 class User() {
 
@@ -22,7 +24,7 @@ class User() {
         this.email = hashMap["email"] as String
         this.password = hashMap["password"] as String
         this.cookie = hashMap["cookie"] as String
-        this.profile = Profile(hashMap["profile"] as HashMap<String, String>)
+        this.profile = Profile(hashMap["profile"] as HashMap<String, Any>)
     }
 
     var email: String? = null
@@ -51,17 +53,22 @@ class User() {
             val regionId: String,
             val phone: String,
             val imgURL: String,
-            val rating: String
+            val rating: String,
+            val articles: List<Article>,
+            val achievements: List<String>
     ){
-        constructor(hashMap: HashMap<String, String>): this(
-                hashMap["name"]!!,
-                hashMap["surname"]!!,
-                hashMap["birthday"]!!,
-                hashMap["region"]!!,
-                hashMap["regionId"]!!,
-                hashMap["phone"]!!,
-                hashMap["imgURL"]!!,
-                hashMap["rating"]!!
+        constructor(hashMap: HashMap<String, Any>): this(
+                hashMap["name"]!! as String,
+                hashMap["surname"]!! as String,
+                hashMap["birthday"]!! as String,
+                hashMap["region"]!! as String,
+                hashMap["regionId"]!! as String,
+                hashMap["phone"]!! as String,
+                hashMap["imgURL"]!! as String,
+                hashMap["rating"]!! as String,
+                (hashMap["articles"] as List<HashMap<String,String>>).map { Article(it["title"]!!, it["url"]!!) },
+                hashMap["achievements"] as List<String>
+
         )
     }
 }

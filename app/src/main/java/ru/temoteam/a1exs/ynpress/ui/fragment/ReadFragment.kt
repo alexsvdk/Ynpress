@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
 import ru.temoteam.a1exs.ynpress.R
 import ru.temoteam.a1exs.ynpress.presentation.view.ReadView
 import ru.temoteam.a1exs.ynpress.presentation.presenter.ReadPresenter
@@ -13,8 +12,7 @@ import ru.temoteam.a1exs.ynpress.presentation.presenter.ReadPresenter
 import com.arellomobile.mvp.MvpFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import kotlinx.android.synthetic.main.fragment_read.*
-import ru.temoteam.a1exs.ynpress.presentation.adapter.ReadAdapter
-import ru.temoteam.a1exs.ynpress.ui.activity.MainActivity
+import ru.temoteam.a1exs.ynpress.presentation.adapter.ReadRecyclerAdapter
 import android.support.v7.widget.RecyclerView
 
 
@@ -68,8 +66,8 @@ class ReadFragment : MvpFragment(), ReadView {
 
     }
 
-    override fun setRecyclerAdapter(adapter: ReadAdapter) {
+    override fun setRecyclerAdapter(recyclerAdapter: ReadRecyclerAdapter) {
         recycler.layoutManager = layoutManager
-        recycler.adapter = adapter
+        recycler.adapter = recyclerAdapter
     }
 }

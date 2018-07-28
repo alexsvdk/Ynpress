@@ -2,6 +2,7 @@ package ru.temoteam.a1exs.ynpress.ui.fragment
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,8 @@ import com.ms_square.etsyblur.Blur
 import com.ms_square.etsyblur.BlurConfig
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.jetbrains.anko.imageBitmap
+import ru.temoteam.a1exs.ynpress.presentation.adapter.AchievementsRecyclerAdapter
+import ru.temoteam.a1exs.ynpress.presentation.adapter.ArticlesRecyclerAdapter
 
 class ProfileFragment : MvpFragment(), ProfileView {
 
@@ -55,4 +58,15 @@ class ProfileFragment : MvpFragment(), ProfileView {
     override fun setEmail(text: String) {
         designation.text = text
     }
+
+    override fun setArticlesAdapter(adapter: ArticlesRecyclerAdapter) {
+        rec_articles.layoutManager = LinearLayoutManager(activity)
+        rec_articles.adapter = adapter
+    }
+
+    override fun setAchievementsAdapter(adapter: AchievementsRecyclerAdapter) {
+        rec_achievements.layoutManager = LinearLayoutManager(activity)
+        rec_achievements.adapter = adapter
+    }
+
 }

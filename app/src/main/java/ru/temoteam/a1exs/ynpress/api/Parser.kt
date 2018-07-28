@@ -23,11 +23,14 @@ object Parser {
         val birthday = inputs.find { it.hasAttr("name")&&it.attr("name")=="birthday" }!!.`val`()  + "."+
                 inputs.find { it.hasAttr("name")&&it.attr("name")=="birthmonth" }!!.`val`()  + "."+
                 info.getElementsByClass("yp-select white four-digits left").select("option").find { it.hasAttr("selected") }!!.`val`()
+        val articles = page.getElementsByClass("articles")[0].getElementsByClass("list")[0].children()
+                .map { Article(it.select("a")[0].text(),it.select("a")[0].attr("href"),status = it.select("span > span")[0].text()=="Опубликовано") }
+        val achivements = page.getElementsByClass("achievements")[0].select("div > span").map { it.ownText() }
 
         return User.Profile(
                 name.substringBefore(" "),
                 name.substringAfter(" "),
-                birthday,regionName,regionID,phone,imgURL,rating
+                birthday,regionName,regionID,phone,imgURL,rating,articles,achivements
                 )
     }
 
@@ -60,10 +63,19 @@ object Parser {
             when{
                 (it.`is`("p")) ->
                     if (it.text().length>1) content.articleParts.add(TextArticlePart(it.text(),it.select("strong").size!=0))
+
                 (it.className() == "yp-video") ->
                         content.articleParts.add(VideoArticlePart(it.attr("data-video")))
+
                 (it.className() == "yp-photo-gallery") ->
                         content.articleParts.add(GalleryArticlePart(it.getElementsByClass("gallery-icon landscape").select("a").eachAttr("href")))
+
+                (it.className() == "yp-audio") ->
+                        content.articleParts.add(AudioArticlePart(it.select("script").text().substringAfter("mp3: \"").substringBefore("\"")))
+
+                (it.`is`("figure")) ->
+                        content.articleParts.add(ImgArticlePart(it.select("img").attr("src")))
+
                 else -> {}
 
             }

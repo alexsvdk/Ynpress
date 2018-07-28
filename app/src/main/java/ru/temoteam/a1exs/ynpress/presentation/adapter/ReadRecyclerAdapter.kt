@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.arellomobile.mvp.MvpView
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.uiThread
@@ -21,7 +20,7 @@ import ru.temoteam.a1exs.ynpress.ui.activity.ArticleActivity
 import java.net.URL
 import java.util.*
 
-class ReadAdapter: RecyclerView.Adapter<ReadAdapter.ReadVH>() {
+class ReadRecyclerAdapter: RecyclerView.Adapter<ReadRecyclerAdapter.ReadVH>() {
 
     val articles = LinkedList<Article>()
     var page = 1
