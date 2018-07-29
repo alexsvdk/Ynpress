@@ -2,9 +2,6 @@ package ru.temoteam.a1exs.ynpress.api.objects
 
 import android.support.annotation.Keep
 import android.util.Log
-import okhttp3.Cookie
-import okhttp3.CookieJar
-import okhttp3.HttpUrl
 import ru.temoteam.a1exs.ynpress.api.Parser
 import ru.temoteam.a1exs.ynpress.api.Requester
 import java.util.*
@@ -34,7 +31,7 @@ class User() {
 
     fun login(){
         val response = Requester.auth(email!!, password!!)
-        cookie = response!!.header("Set-Cookie")!!.substring(response.header("Set-Cookie")!!.indexOf("wordpress_")).substringBefore(";")
+        cookie = response.setCoocie!!.substring(response.setCoocie.indexOf("wordpress_")).substringBefore(";")
     }
 
     fun activateAccount(){
@@ -42,7 +39,7 @@ class User() {
     }
 
     fun loadProfile(){
-        profile=Parser.parseProfile(Requester.profile()!!.body()!!.string())
+        profile=Parser.parseProfile(Requester.profile()!!.text)
     }
 
     data class Profile(

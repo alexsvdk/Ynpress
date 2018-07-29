@@ -1,5 +1,6 @@
 package ru.temoteam.a1exs.ynpress.presentation.adapter
 
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
@@ -17,13 +18,16 @@ import ru.temoteam.a1exs.ynpress.api.Parser
 import ru.temoteam.a1exs.ynpress.api.Requester
 import ru.temoteam.a1exs.ynpress.api.objects.Article
 import ru.temoteam.a1exs.ynpress.ui.activity.ArticleActivity
+import ru.temoteam.a1exs.ynpress.util.ImageLoader
 import java.net.URL
 import java.util.*
 
+@Suppress("EXPERIMENTAL_FEATURE_WARNING")
 class ReadRecyclerAdapter: RecyclerView.Adapter<ReadRecyclerAdapter.ReadVH>() {
 
     val articles = LinkedList<Article>()
-    var page = 1
+    private var page = 1
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReadVH {
         return  ReadVH(LayoutInflater.from(parent.context).inflate(R.layout.item_read, parent, false))
@@ -38,8 +42,12 @@ class ReadRecyclerAdapter: RecyclerView.Adapter<ReadRecyclerAdapter.ReadVH>() {
              doAsync {
                  Log.i("LOADING",articles.size.toString())
                  page++
-                 articles.addAll(Parser.parseRead(Requester.read(page)!!.body()!!.string()))
-                 uiThread { notifyDataSetChanged() }
+                 val new = Parser.parseRead(Requester.read(page)!!.text)
+                 articles.addAll(new)
+                 uiThread {
+                     notifyDataSetChanged()
+                     ImageLoader.addToPreLoad(new.map { it.imgURL!! })
+                 }
              }
              holder.title.text = "Загрузка"
          }else{
@@ -49,19 +57,18 @@ class ReadRecyclerAdapter: RecyclerView.Adapter<ReadRecyclerAdapter.ReadVH>() {
              holder.card.onClick {
                  holder.itemView.context.startActivity(ArticleActivity.getIntent(holder.itemView.context))
              }
-             doAsync {
-                 val bitmap = BitmapFactory.decodeStream(URL(articles[position].imgURL).openStream())
-                 uiThread { holder.img.setImageBitmap(bitmap) }
-             }
+             ImageLoader.getBitmapAsync(articles[position].imgURL!!) {holder.img.setImageBitmap(it)}
+
+
          }
     }
 
 
     class ReadVH(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-        val title = itemView!!.findViewById<TextView>(R.id.title)
-        val date = itemView!!.findViewById<TextView>(R.id.date)
-        val category = itemView!!.findViewById<TextView>(R.id.category)
-        val img = itemView!!.findViewById<ImageView>(R.id.img)
-        val card = itemView!!.findViewById<CardView>(R.id.card)
+        val title = itemView!!.findViewById<TextView>(R.id.title)!!
+        val date = itemView!!.findViewById<TextView>(R.id.date)!!
+        val category = itemView!!.findViewById<TextView>(R.id.category)!!
+        val img = itemView!!.findViewById<ImageView>(R.id.img)!!
+        val card = itemView!!.findViewById<CardView>(R.id.card)!!
     }
 }

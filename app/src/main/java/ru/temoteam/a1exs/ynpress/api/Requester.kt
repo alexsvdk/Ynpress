@@ -1,10 +1,7 @@
 package ru.temoteam.a1exs.ynpress.api
 
 import android.util.Log
-import com.androidnetworking.AndroidNetworking
-import com.androidnetworking.error.ANError
-import com.androidnetworking.interfaces.OkHttpResponseListener
-import okhttp3.*
+import ru.temoteam.a1exs.ynpress.util.Multipart
 
 
 object Requester {
@@ -12,27 +9,25 @@ object Requester {
     const val baseUrl = "http://ynpress.com"
     var cookie: String = ""
 
-    val client = OkHttpClient.Builder().followRedirects(false).followSslRedirects(false).build()
+    fun basereq(patch:String, headers: Map<String,String> = emptyMap(), params: Map<String,String> = emptyMap()): Multipart.Response {
+        val request = Multipart(if (patch.startsWith("http")) patch else baseUrl+patch, cookie)
 
-    fun basereq(patch:String, headers: Map<String,String> = emptyMap(), params: Map<String,String> = emptyMap()): Response? {
+        request.addHeaderFields(headers)
+        request.addFormField("text","text")
+        request.addFormFields(params)
 
-        val upload = AndroidNetworking.upload(if (patch.startsWith("http")) patch else baseUrl+patch).setOkHttpClient(client).addHeaders("Cookie", cookie)
-        upload.addMultipartParameter("text","text")
-        params.forEach { t, u -> upload.addMultipartParameter(t,u) }
-        val response = upload.build().executeForOkHttpResponse()
-        if (!response.isSuccess) Log.e("RESPONSE", response.error.message)
-        return response.okHttpResponse
+        return request.upload()
     }
 
-    fun read(page: Int):Response?{
+    fun read(page: Int):Multipart.Response{
         return basereq("/read/page/$page/")
     }
 
-    fun auth(email: String,password:String):Response?{
-       return basereq("/ajax/auth.php",params = mapOf("yp-email" to email, "yp-password" to password))
+    fun auth(email: String,password:String):Multipart.Response{
+        return basereq("/ajax/auth.php",params = mapOf("yp-email" to email, "yp-password" to password))
     }
 
-    fun profile():Response?{
+    fun profile():Multipart.Response{
         return basereq("/profile/")
     }
 

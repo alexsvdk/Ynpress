@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.ActionMode
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import com.androidnetworking.AndroidNetworking
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import ru.temoteam.a1exs.ynpress.R
@@ -26,6 +25,7 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onEditorAction
 import org.jetbrains.anko.uiThread
 import ru.temoteam.a1exs.ynpress.api.objects.User
+import ru.temoteam.a1exs.ynpress.util.ImageLoader
 import kotlin.math.log
 
 
@@ -44,7 +44,7 @@ class SplashActivity : MvpActivity(), SplashView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        AndroidNetworking.initialize(applicationContext)
+        ImageLoader.init(applicationContext)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import com.arellomobile.mvp.MvpView
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import ru.temoteam.a1exs.ynpress.util.ImageLoader
 import java.net.URL
 
 interface MainView : MvpView {
@@ -13,9 +14,6 @@ interface MainView : MvpView {
     fun setDrawerText2(text: String)
 
     fun setDrawerPic(url: String){
-        doAsync {
-            val bitmap = BitmapFactory.decodeStream(URL(url).openStream())
-            uiThread { setDrawerPic(bitmap) }
-        }
+        ImageLoader.getBitmapAsync(url) {setDrawerPic(it)}
     }
 }

@@ -7,6 +7,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import ru.temoteam.a1exs.ynpress.presentation.adapter.AchievementsRecyclerAdapter
 import ru.temoteam.a1exs.ynpress.presentation.adapter.ArticlesRecyclerAdapter
+import ru.temoteam.a1exs.ynpress.util.ImageLoader
 import java.net.URL
 
 interface ProfileView : MvpView {
@@ -17,10 +18,7 @@ interface ProfileView : MvpView {
     fun setAchievementsAdapter(adapter: AchievementsRecyclerAdapter)
 
     fun setProfilePic(url: String){
-        doAsync {
-            val bitmap = BitmapFactory.decodeStream(URL(url).openStream())
-            uiThread { setProfilePic(bitmap) }
-        }
+        ImageLoader.getBitmapAsync(url) {setProfilePic(it)}
     }
 
 }
